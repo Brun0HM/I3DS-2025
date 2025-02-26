@@ -3,7 +3,7 @@ import Switch from "./Components//switch/Switch";
 import Links from "./Components/links/Link";
 import SocialLinks from "./Components/socialLinks/SocialLinks";
 import Footer from "./Components/footer/Footer";
-import Foto from "./img/ImagemAlvin.jpg";
+import Foto from "./img/ftperfil.jpg";
 import { useState } from "react";
 
 import "./App.css";
