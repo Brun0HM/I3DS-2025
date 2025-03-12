@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import Footer from "./components/footer/Footer";
 import MovieCard from "./components/movieCard/MovieCard";
+import logo from "./assets/devflix.png";
+import lupa from "./assets/search.svg"
 
 const App = () => {
   const [search, setSearch] = useState("");
@@ -30,7 +32,7 @@ const App = () => {
 
   return (
     <div id="app">
-      <img className="logo" src={"https://placehold.co/200x200"} alt="logo" />
+      <img className="logo" src={logo} alt="logo" />
       <div className="search">
         <input
           onKeyDown={handleKeyPress}
@@ -40,7 +42,7 @@ const App = () => {
         />
         <img
           onClick={() => SearchMovies(search)}
-          src={"https://placehold.co/20x20"}
+          src={lupa}
           alt=""
         />
       </div>
