@@ -3,7 +3,7 @@ import "./App.css";
 import Footer from "./components/footer/Footer";
 import MovieCard from "./components/movieCard/MovieCard";
 import logo from "./assets/devflix.png";
-import lupa from "./assets/search.svg"
+import lupa from "./assets/search.svg";
 
 const App = () => {
   const [search, setSearch] = useState("");
@@ -40,16 +40,12 @@ const App = () => {
           type="text"
           placeholder="Procurar filmes"
         />
-        <img
-          onClick={() => SearchMovies(search)}
-          src={lupa}
-          alt=""
-        />
+        <img onClick={() => SearchMovies(search)} src={lupa} alt="" />
       </div>
       {movies?.length > 0 ? (
         <div className="container">
           {movies.map((movie, index) => (
-            <MovieCard key={index} {...movie} />
+            <MovieCard key={index} apiUrl={apiUrl} {...movie} />
           ))}
         </div>
       ) : (

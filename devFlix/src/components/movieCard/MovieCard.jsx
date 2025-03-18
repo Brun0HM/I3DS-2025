@@ -1,7 +1,10 @@
 import styles from "./MovieCard.module.css";
+import MovieDescription from "../movieDescription/MovieDescription";
 
-const MovieCard = (props) => {
+
+const MovieCard = ({apiUrl, ...props}) => {
   return (
+    <>
     <div className={styles.movie}>
       <div>
         <p>{props.Year}</p>
@@ -15,6 +18,8 @@ const MovieCard = (props) => {
         <p>{props.Description}</p>
       </div>
     </div>
+    <MovieDescription apiUrl={apiUrl} movieID={props.imdbID} />
+    </>
   );
 };
 
