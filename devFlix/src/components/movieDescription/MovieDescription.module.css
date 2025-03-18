@@ -1,0 +1,126 @@
+.modalBackdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 999;
+    animation: fadeIn 0.3s ease-in-out forwards;
+  }
+  
+  .movieModal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 850px;
+    transform: translate(-50%, -50%);
+    border-radius: 10px;
+    background: #000;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
+    z-index: 1000;
+    color: #fff;
+    max-height: 100vh;
+    animation: fadeIn 0.3s ease-in-out forwards;
+  }
+  
+  .movieInfo {
+    width: 100%;
+    border-radius: inherit;
+    background: #000;
+    position: relative;
+  }
+  
+  .movieInfo img {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    position: relative;
+    width: 100%;
+    height: 480px;
+    object-fit: cover;
+    object-position: top;
+  }
+  
+  .btnClose {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 15px;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: #181818;
+    color: #fff;
+    cursor: pointer;
+  }
+  
+  .movieType {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 30%;
+    background: linear-gradient(#ffffff00, #000);
+  }
+  .movieType div:nth-of-type(1) {
+    position: absolute;
+    top: 2em;
+    left: 2em;
+    color: #fff;
+    text-transform: uppercase;
+  }
+  
+  .movieType div:nth-of-type(1) img {
+    width: 5%;
+    height: 5%;
+    border-radius: 0;
+  }
+  
+  .movieType a {
+    margin-top: 1em;
+    padding: 0.2em 0.7em;
+    background: #fff;
+    border-radius: 0.4em;
+    text-decoration: none;
+    font-weight: bolder;
+  }
+  
+  .containerMisc {
+    font-size: 14pt;
+    display: flex;
+    padding: 2em 2em 1em;
+  }
+  
+  .containerFlex {
+    flex: 1;
+  }
+  
+  .desc {
+    padding: 0 2em 2em;
+    text-align: justify;
+  }
+  
+  @media screen and (max-width: 768px) {
+    .movieModal {
+      width: 550px;
+    }
+  }
+  
+  @media screen and (max-width: 430px) {
+    .movieModal {
+      width: 320px;
+      margin-top: 2em;
+    }
+  
+    .desc {
+      padding-bottom: 3.5em;
+    }
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
