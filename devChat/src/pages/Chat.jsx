@@ -40,8 +40,7 @@ const Chat = ({ socket, onLeave }) => {
   return (
     <div
       id="chat-container"
-      className="bg-dark rounded-4 p-3 d-flex flex-column"
-      style={{ height: "90vh", width: "90vw" }}
+      className="bg-dark rounded-4 p-3 d-flex flex-column fundinho"
     >
       <div
         id="chat-body"
