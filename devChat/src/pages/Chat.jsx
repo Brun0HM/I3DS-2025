@@ -1,64 +1,88 @@
-import React from "react";
-
+import React, { useEffect, useRef, useState } from "react";
 const Chat = (props) => {
-  //fake messages data
-  const messages = [
-    {
-      authorId: 1,
-      authorName: "rogerio",
-      message: "olá, onde vende solda caustica",
-    },
-    {
-      authorId: 2,
-      authorName: "calos",
-      message: "olá, vendemos mas nao e comestivel",
-    },
-    {
-      authorId: 3,
-      authorName: "rogerio",
-      message: "entao feche essa espelunca",
-    },
-  ];
+  const [messagesList, setMessagesList] = useState([]);
+  const messageRef = useRef();
+  const bottomRef = useRef();
+  useEffect(() => {
+    props.socket.on("receive_message", (data) => {
+      setMessagesList((current) => [...current, data]);
+    });
+
+    return () => props.socket.off("receive_message");
+  }, [props.socket]);
+  useEffect(() => {
+    bottomRef.current.scrollIntoView({ behavior: "smooth" });
+  }, [messagesList]);
+
+  const handleSubmit = () => {
+    if (
+      messagesList.some((message) => {
+        if (message.authorId === "undefined") {
+          window.location.reload();
+          return true;
+        }
+        return false;
+      })
+    ) {
+      return;
+    }
+
+    const message = messageRef.current.value;
+    if (!message.trim()) return;
+
+    props.socket.emit("message", message);
+
+    messageRef.current.value = "";
+    messageRef.current.focus();
+  };
+
   return (
     <div
       id="chat-container"
-      className="bg-dark rounded-4 p-3 d-flex flex-column"
       style={{ width: "400px", height: "600px" }}
+      className="bg-dark rounded-4 p-3 d-flex flex-column"
     >
       <div
         id="chat-body"
-        className="overflow-y-auto gap-3 h-100 d-flex flex-column"
+        className="overflow-y-hidden h-100 d-flex flex-column gap-3"
       >
-        <div className=" align-self-start">
-          <button
-            className=" btn-close btn-close-white"
-            id="send-button"
-            onClick={() => props.visibility(false)}
-          ></button>
-        </div>
-        {messages.map((message, index) => (
+        {messagesList.map((message, index) => (
           <div
-            className="align-self-start bg-black rounded-3 p-2 me-5"
+            className={`${
+              message.authorId === props.socket.id
+                ? "align-self-end ms-5 bg-danger"
+                : "align-self-start me-5 bg-white"
+            }  rounded-3 p-2`}
             key={index}
           >
-            <div id="message-author" className="fw-bold text-capitalize">{message.authorName}</div>
-            <div id="message-text">{message.message}</div>
+            <div className="message-author fw-bold text-dark">
+              {message.author}
+            </div>
+            <div className="message-text text-dark">{message.text}</div>
           </div>
         ))}
+        <div ref={bottomRef} />
       </div>
       <div id="chat-footer" className="input-group">
         <input
-          className="form-control border-0"
+          autoFocus
+          ref={messageRef}
+          id="msg-user"
+          name="msg-user"
+          className="form-control text-dark"
           type="text"
-          id="msgUser"
-          name="msgUser"
-          placeholder="Mensagem"
-          onClick={() => {
-            document.getElementById("msgUser").value();
-          }}
+          placeholder="Digite sua mensagem..."
+          onClick={() => {}}
+          onKeyDown={(e) => e.key == "Enter" && handleSubmit()}
         />
-        <span className="input-group-text " id="basic-addon1">
-          <i className="bi bi-send"></i>
+        <span className="input-group-text">
+          <button
+            className="btn m-0 input-group-text"
+            id="basic-addon1"
+            onClick={() => handleSubmit()}
+          >
+            <i className="bi bi-send"></i>
+          </button>
         </span>
       </div>
     </div>
