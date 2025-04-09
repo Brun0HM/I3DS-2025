@@ -55,9 +55,7 @@ const Chat = ({ socket, onLeave }) => {
                 : "align-self-start me-5 bg-white"
             } rounded-3 p-2`}
           >
-            <div className="message-author fw-bold text-dark">
-              {msg.author}
-            </div>
+            <div className="message-author fw-bold text-dark">{msg.author}</div>
             <div className="message-text text-dark">{msg.text}</div>
           </div>
         ))}
@@ -73,7 +71,7 @@ const Chat = ({ socket, onLeave }) => {
           onKeyDown={(e) => e.key === "Enter" && handleSend()}
         />
         <span className="input-group-text">
-          <button className="btn btn-outline-primary" onClick={handleSend}>
+          <button className="btn" onClick={handleSend}>
             <i className="bi bi-send"></i>
           </button>
         </span>

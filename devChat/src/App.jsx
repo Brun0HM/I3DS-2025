@@ -14,7 +14,7 @@ function App() {
   return (
     <div
       id="App"
-      className="m-0 p-0 bg-black vh-100 text-light d-flex justify-content-center align-items-center flex-column"
+      className="m-0 p-0 bg-black vh-100 text-light d-flex justify-content-center align-items-center flex-column con"
     >
       {chatVisible ? (
         <Chat socket={socket} onLeave={() => setChatVisible(false)} />
