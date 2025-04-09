@@ -39,7 +39,6 @@ const Chat = (props) => {
   return (
     <div
       id="chat-container"
-      style={{ width: "400px", height: "600px" }}
       className="bg-dark rounded-4 p-3 d-flex flex-column"
     >
       <div

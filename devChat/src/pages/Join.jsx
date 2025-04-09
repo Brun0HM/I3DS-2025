@@ -22,7 +22,7 @@ const Join = (props) => {
 
   return (
     <div className="text-center">
-      <h1>devChat</h1>
+      <h1 className="text">devChat</h1>
       <div className="p-4 d-flex rounded flex-column justify-content-center align-items-center bg-dark">
         <h3>Bem-vindo ao devChat!</h3>
         <input
@@ -35,7 +35,7 @@ const Join = (props) => {
           onKeyDown={(e) =>  (e.key == "Enter")  && handleSubmit()}
         />
         <button
-          className="btn mt-1 btn-dark rounded-2"
+        className="mt-3 rounded-2 button"
           id="send-button"
           onClick={() => {
             handleSubmit();
