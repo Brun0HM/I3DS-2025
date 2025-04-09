@@ -1,85 +1,80 @@
 import React, { useEffect, useRef, useState } from "react";
-const Chat = (props) => {
-  const [messagesList, setMessagesList] = useState([]);
-  const messageRef = useRef();
+
+const Chat = ({ socket, onLeave }) => {
+  const { conn: connection, username } = socket;
+  const [messages, setMessages] = useState([]);
+  const inputRef = useRef();
   const bottomRef = useRef();
-  useEffect(() => {
-    props.socket.on("receive_message", (data) => {
-      setMessagesList((current) => [...current, data]);
-    });
 
-    return () => props.socket.off("receive_message");
-  }, [props.socket]);
   useEffect(() => {
-    bottomRef.current.scrollIntoView({ behavior: "smooth" });
-  }, [messagesList]);
+    const handleReceiveMessage = (user, message) => {
+      setMessages((prev) => [...prev, { author: user, text: message }]);
+    };
 
-  const handleSubmit = () => {
-    if (
-      messagesList.some((message) => {
-        if (message.authorId === "undefined") {
-          window.location.reload();
-          return true;
-        }
-        return false;
-      })
-    ) {
-      return;
+    connection.off("ReceiveMessage");
+    connection.on("ReceiveMessage", handleReceiveMessage);
+
+    return () => {
+      connection.off("ReceiveMessage", handleReceiveMessage);
+    };
+  }, [connection]);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  const handleSend = async () => {
+    const message = inputRef.current.value.trim();
+    if (!message) return;
+
+    try {
+      await connection.invoke("SendMessage", username, message);
+    } catch (err) {
+      console.error("Erro ao enviar mensagem:", err);
     }
 
-    const message = messageRef.current.value;
-    if (!message.trim()) return;
-
-    props.socket.emit("message", message);
-
-    messageRef.current.value = "";
-    messageRef.current.focus();
+    inputRef.current.value = "";
+    inputRef.current.focus();
   };
 
   return (
     <div
       id="chat-container"
       className="bg-dark rounded-4 p-3 d-flex flex-column"
+      style={{ height: "90vh", width: "90vw" }}
     >
       <div
         id="chat-body"
-        className="overflow-y-hidden h-100 d-flex flex-column gap-3"
+        className="overflow-auto flex-grow-1 d-flex flex-column gap-3"
       >
-        {messagesList.map((message, index) => (
+        {messages.map((msg, idx) => (
           <div
+            key={idx}
             className={`${
-              message.authorId === props.socket.id
+              msg.author === username
                 ? "align-self-end ms-5 bg-danger"
                 : "align-self-start me-5 bg-white"
-            }  rounded-3 p-2`}
-            key={index}
+            } rounded-3 p-2`}
           >
             <div className="message-author fw-bold text-dark">
-              {message.author}
+              {msg.author}
             </div>
-            <div className="message-text text-dark">{message.text}</div>
+            <div className="message-text text-dark">{msg.text}</div>
           </div>
         ))}
         <div ref={bottomRef} />
       </div>
-      <div id="chat-footer" className="input-group">
+      <div id="chat-footer" className="input-group mt-3">
         <input
           autoFocus
-          ref={messageRef}
-          id="msg-user"
-          name="msg-user"
+          ref={inputRef}
           className="form-control text-dark"
           type="text"
           placeholder="Digite sua mensagem..."
-          onClick={() => {}}
-          onKeyDown={(e) => e.key == "Enter" && handleSubmit()}
+          onKeyDown={(e) => e.key === "Enter" && handleSend()}
         />
         <span className="input-group-text">
-          <button
-            className="btn m-0 input-group-text"
-            id="basic-addon1"
-            onClick={() => handleSubmit()}
-          >
+          <button className="btn btn-outline-primary" onClick={handleSend}>
             <i className="bi bi-send"></i>
           </button>
         </span>

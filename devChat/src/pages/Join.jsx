@@ -1,23 +1,30 @@
 import React, { useRef } from "react";
-import { io } from "socket.io-client";
+import * as signalR from "@microsoft/signalr";
 
-const Join = (props) => {
-  //hook
+const Join = ({ setSocket, onJoin }) => {
   const usernameRef = useRef(null);
 
-  const handleSubmit = async () => {
-    const username = usernameRef.current.value;
-    if (!username.trim() || username.length < 2) {
+  const handleJoin = async () => {
+    const username = usernameRef.current.value.trim();
+    if (username.length < 2) {
       alert("Digite um nome válido");
       return;
     }
 
-    //Criando a conexão com o socket
-    const servidorSocket = await io.connect("http://192.168.10.123:3001");
-    servidorSocket.emit("set_username", username);
-    //abrindo a pagina de chat
-    props.setSocket(servidorSocket);
-    props.visibility(true);
+    const connection = new signalR.HubConnectionBuilder()
+      .withUrl("http://localhost:5139/chatHub", { withCredentials: true })
+      .withAutomaticReconnect()
+      .build();
+
+    try {
+      await connection.start();
+      await connection.invoke("SetUsername", username);
+      setSocket({ conn: connection, username });
+      onJoin();
+    } catch (err) {
+      console.error("Erro ao conectar:", err);
+      alert("Falha ao conectar ao servidor.");
+    }
   };
 
   return (
@@ -27,19 +34,15 @@ const Join = (props) => {
         <h3>Bem-vindo ao devChat!</h3>
         <input
           ref={usernameRef}
-          className=" bg-dark border-0 border-bottom bg-transparent text-light"
+          className="bg-dark border-0 border-bottom text-light"
           type="text"
-          id="message-input"
           placeholder="Nome"
           style={{ height: "38px" }}
-          onKeyDown={(e) =>  (e.key == "Enter")  && handleSubmit()}
+          onKeyDown={(e) => e.key === "Enter" && handleJoin()}
         />
         <button
-        className="mt-3 rounded-2 button"
-          id="send-button"
-          onClick={() => {
-            handleSubmit();
-          }}
+          className="mt-3 rounded-2 button"
+          onClick={handleJoin}
           style={{ width: "200px" }}
         >
           Entrar
